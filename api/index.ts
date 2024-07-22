@@ -12,9 +12,10 @@ app.use(express.json());
 
 const mode = process.env.MODE;
 const slackToken = process.env.SLACK_BOT_TOKEN;
-const slackChannel = process.env.SLACK_CHANNEL_ID;
+const slackChannel = process.env.SLACK_CHANNEL;
 const webhookSecret = process.env.PLANETSCALE_WEBHOOK_SECRET;
 const credentialsPath = process.env.CREDENTIALS_PATH;
+
 
 const slack = new WebClient(slackToken);
 

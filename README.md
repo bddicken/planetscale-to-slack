@@ -4,7 +4,7 @@ A app to connect PlanetScale database events to Slack notifications.
 
 ![PlanetScale to Slack](https://github.com/samlambert/planetscale-to-slack/assets/1155781/478d465f-0ca4-4312-a6e3-944bae6612ae)
 
-## Setup
+## Vercel Setup
 
 - Create a project on Vercel and deploy this repository
 - Set up a [Slack App](https://api.slack.com/quickstart) with `chat:write` and `chat:write.customize` scopes
