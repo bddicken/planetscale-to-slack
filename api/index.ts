@@ -33,7 +33,7 @@ async function sendSlackMessage(message: string) {
 const verifySignature = (req: Request, secret: string): boolean => {
   const signature = crypto.createHmac('sha256', secret).update(JSON.stringify(req.body)).digest('hex');
   const trusted = Buffer.from(signature, 'ascii');
-  const header = req.headers['x-planetscale-signature'];
+  const header = (req.headers['x-planetscale-signature'] as string);
   if (header === undefined) {
     return false;
   }
