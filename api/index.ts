@@ -123,6 +123,4 @@ if (mode == 'standalone') {
   httpsServer.listen(443, () => console.log('server started') );
 }
 
-else if (mode == 'vercel') {
-  export default app;
-}
+export default app;
