@@ -48,9 +48,13 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/webhook', async (req, res) => {
 
+  console.log(req.body)
+  
   //if (!verifySignature(req, webhookSecret)) {
   //  return res.status(401).send('Unauthorized');
   //}
+
+  console.log('about to decide where to send this')
 
   try {
     const data = req.body;
