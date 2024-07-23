@@ -4,18 +4,18 @@ import crypto from 'crypto'
 import express, { Request, Response } from "express";
 import { WebClient } from '@slack/web-api';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser'
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(bodyParser.raw({inflate:true, type: 'application/json'}));
 
 const mode = process.env.MODE;
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slackChannel = process.env.SLACK_CHANNEL;
 const webhookSecret = process.env.PLANETSCALE_WEBHOOK_SECRET;
 const credentialsPath = process.env.CREDENTIALS_PATH;
-
 
 const slack = new WebClient(slackToken);
 
@@ -31,15 +31,14 @@ async function sendSlackMessage(message: string) {
 }
 
 const verifySignature = (req: Request, secret: string): boolean => {
-  const signature = crypto.createHmac('sha256', secret).update(JSON.stringify(req.body)).digest('hex');
+  const signature = crypto.createHmac('sha256', secret).update(req.body).digest('hex');
   const trusted = Buffer.from(signature, 'ascii');
-  const header = (req.headers['x-planetscale-signature'] as string);
+  const header = req.headers['x-planetscale-signature'];
   if (header === undefined) {
     return false;
   }
   const untrusted = Buffer.from(header)
-  const isValid = crypto.timingSafeEqual(trusted, untrusted);
-  return isValid;
+  return crypto.timingSafeEqual(trusted, untrusted);
 }
 
 app.get('/', (req: Request, res: Response) => {
@@ -47,17 +46,12 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/webhook', async (req, res) => {
-
-  console.log(req.body)
-  
-  //if (!verifySignature(req, webhookSecret)) {
-  //  return res.status(401).send('Unauthorized');
-  //}
-
-  console.log('about to decide where to send this')
+  if (!verifySignature(req, webhookSecret)) {
+    return res.status(401).send('Unauthorized');
+  }
 
   try {
-    const data = req.body;
+    const data = JSON.parse(req.body);
     const event = data.event;
 
     switch (event) {
