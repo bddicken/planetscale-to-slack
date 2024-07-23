@@ -42,7 +42,7 @@ const verifySignature = (req: Request, secret: string): boolean => {
 }
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('this server is for webhooks');
+  res.send('See <a href="https://github.com/samlambert/planetscale-to-slack">github.com/samlambert/planetscale-to-slack</a>');
 });
 
 app.post('/webhook', async (req, res) => {
